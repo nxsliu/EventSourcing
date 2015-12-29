@@ -34,12 +34,24 @@ namespace Projection.Repositories
 
         public void CreateApplication(ApplicationContent application)
         {
-            throw new NotImplementedException();
+            using (var conn = new SqlConnection(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\Database\ApplicationAdmin.mdf;Integrated Security=True"))
+            {
+                conn.Open();
+                conn.Execute(
+                    "insert into ApplicationStatus (Id, Name, Status, DateModified, DateCreated) values (@Id, @Name, @Status, @DateCreated, @DateCreated)",
+                    new {Id = application.Data.ApplicationId, Name = application.Data.Name, Status = application.EventType, DateCreated = DateTime.UtcNow});
+            }
         }
 
         public void UpdateApplication(ApplicationContent application)
         {
-            throw new NotImplementedException();
+            using (var conn = new SqlConnection(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\Database\ApplicationAdmin.mdf;Integrated Security=True"))
+            {
+                conn.Open();
+                conn.Execute(
+                    "update ApplicationStatus set Status = @Status, DateModified = @DateModified  where Id = @Id",
+                    new { Id = application.Data.ApplicationId, Status = application.EventType, DateModified = DateTime.UtcNow });
+            }
         }
     }
 }
