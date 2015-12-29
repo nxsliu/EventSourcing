@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Projection.Models;
+using Projection.Repositories;
 
 namespace Projection
 {
@@ -82,7 +83,7 @@ namespace Projection
 
                         var applicationEvent = JsonConvert.DeserializeObject<ApplicationEvent>(entryEvent);
 
-                        
+                        applicationEvent.ProjectEvent(new ApplicationStatusRepository());
                     }
                 }
             }
