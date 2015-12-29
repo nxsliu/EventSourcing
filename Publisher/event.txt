@@ -1,0 +1,29 @@
+[
+  {
+    "eventId": "fbf4b1a1-b4a3-4dfe-a01f-ec52c34e16e4",
+    "eventType": "Phase1",
+    "data": {
+
+      "ApplicationId": "c09d17b9-4a58-4ea8-9fd1-ac1cd1e29d0c",
+      "Name" : "Joe Smith"
+    }
+  },
+  {
+    "eventId": "0f9fad5b-d9cb-469f-a165-70867728951e",
+    "eventType": "Phase2",
+    "data": {
+
+      "ApplicationId": "31bb6a50-becc-4446-92e8-d7016457fb16",
+      "Name" : "Susan Perry"
+    }
+  },
+  {
+    "eventId": "54bf7bb8-1b44-428c-99f7-b2959395f136",
+    "eventType": "Phase3",
+    "data": {
+
+      "ApplicationId": "cbb7b1de-5589-4d58-81b6-167d30ead2a4",
+      "Name" : "Michael Ford"
+    }
+  }
+]
