@@ -20,22 +20,44 @@ namespace Projection
         private const string AtomFeedJson = "application/vnd.eventstore.atom+json";
 
         private readonly NetworkCredential _eventStoreCredential;
+        private readonly IApplicationStatusRepository _applicationStatusRepository;
 
         public SubscriberService()
         {
             _eventStoreCredential = new NetworkCredential("admin", "changeit");
+            _applicationStatusRepository = new ApplicationStatusRepository();
         }
 
         public void Start()
         {
-            ReadSteam().Wait();
+            ReadSteam();
         }
 
         public void Stop()
         {
         }
 
-        private async Task ReadSteam()
+        private void ReadSteam()
+        {
+            var lastEventRead = _applicationStatusRepository.GetLastSuccessfulEvent();
+
+            var currentUri = string.Format("/streams/applications/{0}/forward/2",
+                lastEventRead == null ? 0 : lastEventRead + 1);
+
+            while (true)
+            {
+                var previousUri = ReadBatch(currentUri);
+
+                if (previousUri == currentUri)
+                {
+                    Task.Delay(1000).Wait();
+                }
+
+                currentUri = previousUri;
+            }
+        }
+
+        private string ReadBatch(string uri)
         {
             using (var handler = new HttpClientHandler())
             {
@@ -46,11 +68,11 @@ namespace Projection
                     client.DefaultRequestHeaders.Accept.Clear();
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(AtomFeedJson));
 
-                    HttpResponseMessage response = await client.GetAsync("/streams/applications/0/forward/10");
+                    var response = client.GetAsync(uri).Result;
 
                     if (response.IsSuccessStatusCode)
                     {
-                        var syndication = await response.Content.ReadAsStringAsync();
+                        var syndication = response.Content.ReadAsStringAsync().Result;
 
                         var feed = JsonConvert.DeserializeObject<SyndicationFeed>(syndication);
 
@@ -58,6 +80,14 @@ namespace Projection
                         {
                             LoadEvent(entry).Wait();
                         }
+
+                        var previousLink = feed.Links.FirstOrDefault(l => l.Relation == "previous");
+
+                        return previousLink != null ? previousLink.Uri : uri;
+                    }
+                    else
+                    {
+                        throw new Exception("Could not connect to Event Store");
                     }
                 }
             }
@@ -74,8 +104,7 @@ namespace Projection
                     client.DefaultRequestHeaders.Accept.Clear();
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(AtomFeedJson));
 
-                    HttpResponseMessage response =
-                        await client.GetAsync(entry.Links.Single(l => l.Relation == "alternate").Uri);
+                    var response = await client.GetAsync(entry.Links.Single(l => l.Relation == "alternate").Uri);
 
                     if (response.IsSuccessStatusCode)
                     {
@@ -83,7 +112,7 @@ namespace Projection
 
                         var applicationEvent = JsonConvert.DeserializeObject<ApplicationEvent>(entryEvent);
 
-                        applicationEvent.ProjectEvent(new ApplicationStatusRepository());
+                        applicationEvent.ProjectEvent(_applicationStatusRepository);
                     }
                 }
             }

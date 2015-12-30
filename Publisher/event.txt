@@ -10,7 +10,7 @@
   },
   {
     "eventId": "0f9fad5b-d9cb-469f-a165-70867728951e",
-    "eventType": "Phase2",
+    "eventType": "Phase1",
     "data": {
 
       "ApplicationId": "31bb6a50-becc-4446-92e8-d7016457fb16",
@@ -19,11 +19,47 @@
   },
   {
     "eventId": "54bf7bb8-1b44-428c-99f7-b2959395f136",
+    "eventType": "Phase1",
+    "data": {
+
+      "ApplicationId": "cbb7b1de-5589-4d58-81b6-167d30ead2a4",
+      "Name" : "Michael Ford"
+    }
+  },
+  {
+    "eventId": "84946dac-7656-4a8f-8dcf-102c852ca799",
+    "eventType": "Phase2",
+    "data": {
+
+      "ApplicationId": "c09d17b9-4a58-4ea8-9fd1-ac1cd1e29d0c",
+      "Name" : "Joe Smith"
+    }
+  },
+  {
+    "eventId": "e0a1dc8f-b35a-40c5-9a23-e838a4a857ed",
+    "eventType": "Phase2",
+    "data": {
+
+      "ApplicationId": "31bb6a50-becc-4446-92e8-d7016457fb16",
+      "Name" : "Susan Perry"
+    }
+  },
+  {
+    "eventId": "0c6728f9-d65a-45b1-9b7a-be6b7fd8ec37",
+    "eventType": "Phase2",
+    "data": {
+
+      "ApplicationId": "cbb7b1de-5589-4d58-81b6-167d30ead2a4",
+      "Name" : "Michael Ford"
+    }
+  },
+  {
+    "eventId": "3864431d-4473-43b9-a152-149f1f790f06",
     "eventType": "Phase3",
     "data": {
 
       "ApplicationId": "cbb7b1de-5589-4d58-81b6-167d30ead2a4",
       "Name" : "Michael Ford"
     }
-  }
+  },
 ]

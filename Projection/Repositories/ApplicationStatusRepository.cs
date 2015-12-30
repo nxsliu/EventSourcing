@@ -17,16 +17,22 @@ namespace Projection.Repositories
         void CreateApplication(ApplicationContent application);
 
         void UpdateApplication(ApplicationContent application);
+
+        int? GetLastSuccessfulEvent();
+
     }
 
     public class ApplicationStatusRepository : IApplicationStatusRepository
     {
+        private const string ConnectionString =
+            @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Projects POC\EventSourcing\Projection\Database\ApplicationAdmin.mdf;Integrated Security=True";        
+
         public bool ApplicationExists(string applicationId)
         {
-            using (var conn = new SqlConnection(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\Database\ApplicationAdmin.mdf;Integrated Security=True"))
+            using (var conn = new SqlConnection(ConnectionString))
             {
                 conn.Open();
-                var count = conn.Query<int>("select count(Id) from ApplicationStatus where Id = @Id", new {Id = applicationId}).Single();
+                var count = conn.Query<int>("SELECT COUNT(Id) FROM ApplicationStatus WHERE Id = @Id", new {Id = applicationId}).Single();
 
                 return count > 0;
             }
@@ -34,23 +40,55 @@ namespace Projection.Repositories
 
         public void CreateApplication(ApplicationContent application)
         {
-            using (var conn = new SqlConnection(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\Database\ApplicationAdmin.mdf;Integrated Security=True"))
+            using (var conn = new SqlConnection(ConnectionString))
             {
+                var query = new StringBuilder();
+                query.AppendLine("BEGIN TRAN");
+                query.AppendLine("INSERT INTO ApplicationStatus (Id, Name, Status, DateModified, DateCreated) VALUES (@Id, @Name, @Status, @DateCreated, @DateCreated)");
+                query.AppendLine("UPDATE LastSuccessfulEvent SET EventNumber = @EventNumber");
+                query.AppendLine("COMMIT");
+
                 conn.Open();
-                conn.Execute(
-                    "insert into ApplicationStatus (Id, Name, Status, DateModified, DateCreated) values (@Id, @Name, @Status, @DateCreated, @DateCreated)",
-                    new {Id = application.Data.ApplicationId, Name = application.Data.Name, Status = application.EventType, DateCreated = DateTime.UtcNow});
+                conn.Execute(query.ToString(),
+                    new
+                    {
+                        Id = application.Data.ApplicationId,
+                        Name = application.Data.Name,
+                        Status = application.EventType,
+                        DateCreated = DateTime.UtcNow,
+                        EventNumber = application.EventNumber
+                    });
             }
         }
 
         public void UpdateApplication(ApplicationContent application)
         {
-            using (var conn = new SqlConnection(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\Database\ApplicationAdmin.mdf;Integrated Security=True"))
+            using (var conn = new SqlConnection(ConnectionString))
+            {
+                var query = new StringBuilder();
+                query.AppendLine("BEGIN TRAN");
+                query.AppendLine("UPDATE ApplicationStatus SET Status = @Status, DateModified = @DateModified WHERE Id = @Id");
+                query.AppendLine("UPDATE LastSuccessfulEvent SET EventNumber = @EventNumber");
+                query.AppendLine("COMMIT");
+
+                conn.Open();
+                conn.Execute(query.ToString(),
+                    new
+                    {
+                        Id = application.Data.ApplicationId,
+                        Status = application.EventType,
+                        DateModified = DateTime.UtcNow,
+                        EventNumber = application.EventNumber
+                    });
+            }
+        }
+
+        public int? GetLastSuccessfulEvent()
+        {
+            using (var conn = new SqlConnection(ConnectionString))
             {
                 conn.Open();
-                conn.Execute(
-                    "update ApplicationStatus set Status = @Status, DateModified = @DateModified  where Id = @Id",
-                    new { Id = application.Data.ApplicationId, Status = application.EventType, DateModified = DateTime.UtcNow });
+                return conn.Query<int?>("SELECT EventNumber FROM LastSuccessfulEvent").Single();
             }
         }
     }

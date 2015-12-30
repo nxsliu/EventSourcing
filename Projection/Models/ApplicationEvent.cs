@@ -30,6 +30,8 @@ namespace Projection.Models
 
         public string EventType { get; set; }
 
+        public int EventNumber { get; set; }
+
         public Application Data { get; set; }
     }
 
