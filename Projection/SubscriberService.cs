@@ -41,12 +41,12 @@ namespace Projection
         {
             var lastEventRead = _applicationStatusRepository.GetLastSuccessfulEvent();
 
-            var currentUri = string.Format("/streams/applications/{0}/forward/2",
+            var currentUri = string.Format("/streams/applications/{0}/forward/5",
                 lastEventRead == null ? 0 : lastEventRead + 1);
 
             while (true)
             {
-                var previousUri = ReadBatch(currentUri);
+                var previousUri = ReadBatch(currentUri).Result;
 
                 if (previousUri == currentUri)
                 {
@@ -57,7 +57,7 @@ namespace Projection
             }
         }
 
-        private string ReadBatch(string uri)
+        private async Task<string> ReadBatch(string uri)
         {
             using (var handler = new HttpClientHandler())
             {
@@ -68,11 +68,11 @@ namespace Projection
                     client.DefaultRequestHeaders.Accept.Clear();
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(AtomFeedJson));
 
-                    var response = client.GetAsync(uri).Result;
+                    var response = await client.GetAsync(uri);
 
                     if (response.IsSuccessStatusCode)
                     {
-                        var syndication = response.Content.ReadAsStringAsync().Result;
+                        var syndication = await response.Content.ReadAsStringAsync();
 
                         var feed = JsonConvert.DeserializeObject<SyndicationFeed>(syndication);
 
@@ -113,6 +113,10 @@ namespace Projection
                         var applicationEvent = JsonConvert.DeserializeObject<ApplicationEvent>(entryEvent);
 
                         applicationEvent.ProjectEvent(_applicationStatusRepository);
+                    }
+                    else
+                    {
+                        throw new Exception("Could not connect to Event Store");
                     }
                 }
             }

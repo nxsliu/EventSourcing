@@ -19,7 +19,6 @@ namespace Projection.Repositories
         void UpdateApplication(ApplicationContent application);
 
         int? GetLastSuccessfulEvent();
-
     }
 
     public class ApplicationStatusRepository : IApplicationStatusRepository
@@ -31,10 +30,17 @@ namespace Projection.Repositories
         {
             using (var conn = new SqlConnection(ConnectionString))
             {
-                conn.Open();
-                var count = conn.Query<int>("SELECT COUNT(Id) FROM ApplicationStatus WHERE Id = @Id", new {Id = applicationId}).Single();
+                try
+                {
+                    conn.Open();
+                    var count = conn.Query<int>("SELECT COUNT(Id) FROM ApplicationStatus WHERE Id = @Id", new { Id = applicationId }).Single();
 
-                return count > 0;
+                    return count > 0;
+                }
+                catch (Exception)
+                {                    
+                    throw;
+                }                
             }
         }
 
@@ -48,16 +54,23 @@ namespace Projection.Repositories
                 query.AppendLine("UPDATE LastSuccessfulEvent SET EventNumber = @EventNumber");
                 query.AppendLine("COMMIT");
 
-                conn.Open();
-                conn.Execute(query.ToString(),
-                    new
-                    {
-                        Id = application.Data.ApplicationId,
-                        Name = application.Data.Name,
-                        Status = application.EventType,
-                        DateCreated = DateTime.UtcNow,
-                        EventNumber = application.EventNumber
-                    });
+                try
+                {
+                    conn.Open();
+                    conn.Execute(query.ToString(),
+                        new
+                        {
+                            Id = application.Data.ApplicationId,
+                            Name = application.Data.Name,
+                            Status = application.EventType,
+                            DateCreated = DateTime.UtcNow,
+                            EventNumber = application.EventNumber
+                        });
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
             }
         }
 
@@ -71,15 +84,22 @@ namespace Projection.Repositories
                 query.AppendLine("UPDATE LastSuccessfulEvent SET EventNumber = @EventNumber");
                 query.AppendLine("COMMIT");
 
-                conn.Open();
-                conn.Execute(query.ToString(),
-                    new
-                    {
-                        Id = application.Data.ApplicationId,
-                        Status = application.EventType,
-                        DateModified = DateTime.UtcNow,
-                        EventNumber = application.EventNumber
-                    });
+                try
+                {
+                    conn.Open();
+                    conn.Execute(query.ToString(),
+                        new
+                        {
+                            Id = application.Data.ApplicationId,
+                            Status = application.EventType,
+                            DateModified = DateTime.UtcNow,
+                            EventNumber = application.EventNumber
+                        });
+                }
+                catch (Exception)
+                {                    
+                    throw;
+                }                
             }
         }
 
@@ -87,8 +107,15 @@ namespace Projection.Repositories
         {
             using (var conn = new SqlConnection(ConnectionString))
             {
-                conn.Open();
-                return conn.Query<int?>("SELECT EventNumber FROM LastSuccessfulEvent").Single();
+                try
+                {
+                    conn.Open();
+                    return conn.Query<int?>("SELECT EventNumber FROM LastSuccessfulEvent").Single();
+                }
+                catch (Exception)
+                {                    
+                    throw;
+                }                
             }
         }
     }
