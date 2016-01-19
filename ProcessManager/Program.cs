@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using RabbitMQ.Client;
+using RabbitMQ.Client.Events;
 using Topshelf;
 
 namespace ProcessManager
@@ -10,12 +12,12 @@ namespace ProcessManager
     class Program
     {
         static void Main(string[] args)
-        {
+        {   
             HostFactory.Run(x =>
             {
-                x.Service<SubmissionListener>(s =>
+                x.Service<ApplicationService>(s =>
                 {
-                    s.ConstructUsing(name => new SubmissionListener());
+                    s.ConstructUsing(name => new ApplicationService());
                     s.WhenStarted(tc => tc.Start());
                     s.WhenStopped(tc => tc.Stop());
                 });

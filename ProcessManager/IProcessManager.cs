@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace ProcessManager
 {
-    public class ProcessManager
+    public interface IProcessManager
     {
-
+        void ExecuteProcess(string command, string message, string correlationId);
     }
 }
