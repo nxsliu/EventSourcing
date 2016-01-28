@@ -44,7 +44,7 @@ namespace ProcessManager
 
             var product = GetProcessManager(applicationType);
 
-            product.ExecuteProcess("Phase1Response", message, ea.BasicProperties.CorrelationId);
+            product.ExecuteProcess("Phase1Success", message, ea.BasicProperties.CorrelationId);
         }
 
         public static void Phase2ResponseEventHandler(object model, BasicDeliverEventArgs ea)
@@ -61,7 +61,7 @@ namespace ProcessManager
 
             var product = GetProcessManager(applicationType);
 
-            product.ExecuteProcess("Phase2Response", message, ea.BasicProperties.CorrelationId);
+            product.ExecuteProcess("Phase2Success", message, ea.BasicProperties.CorrelationId);
         }
 
         public static void Phase3ResponseEventHandler(object model, BasicDeliverEventArgs ea)
@@ -78,7 +78,7 @@ namespace ProcessManager
 
             var product = GetProcessManager(applicationType);
 
-            product.ExecuteProcess("Phase3Response", message, ea.BasicProperties.CorrelationId);
+            product.ExecuteProcess("Phase3Success", message, ea.BasicProperties.CorrelationId);
         }
 
         private static IProcessManager GetProcessManager(string applicationType)

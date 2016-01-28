@@ -1,17 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Framing;
 
-namespace ProcessManager
+namespace MessageQueue
 {
-    public class MessageQueue
+    public class Sender
     {
-        public void SendCommand(string queueName, string message, string correlationId)
+        public void SendCommand(string queueName, string message, string correlationId, IDictionary<string, object> headers)
         {
             var factory = new ConnectionFactory() { HostName = "localhost" };
             using (var connection = factory.CreateConnection())
@@ -26,9 +25,10 @@ namespace ProcessManager
 
                     var basicProp = new BasicProperties();
                     basicProp.CorrelationId = correlationId;
-                    basicProp.Headers = new Dictionary<string, object>();
-                    basicProp.Headers.Add(new KeyValuePair<string, object>("ApplicationType", "SuperSaver"));
-                    
+                    basicProp.Headers = headers;
+                    //basicProp.Headers = new Dictionary<string, object>();
+                    //basicProp.Headers.Add(new KeyValuePair<string, object>("ApplicationType", "SuperSaver"));
+
                     var body = Encoding.UTF8.GetBytes(message);
 
                     channel.BasicPublish(exchange: "",
@@ -40,5 +40,5 @@ namespace ProcessManager
                 }
             }
         }
-    }    
+    }
 }
