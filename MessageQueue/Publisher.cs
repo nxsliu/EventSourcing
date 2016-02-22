@@ -8,9 +8,9 @@ using RabbitMQ.Client.Framing;
 
 namespace MessageQueue
 {
-    public class Sender
+    public class Publisher
     {
-        public void SendCommand(string queueName, string message, string correlationId, IDictionary<string, object> headers)
+        public void PublishEvent(string queueName, string message, string correlationId, IDictionary<string, object> headers)
         {
             var factory = new ConnectionFactory() { HostName = "localhost" };
             using (var connection = factory.CreateConnection())
@@ -38,5 +38,6 @@ namespace MessageQueue
                 }
             }
         }
-    }
+    
+}
 }

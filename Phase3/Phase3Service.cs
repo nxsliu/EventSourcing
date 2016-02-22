@@ -6,16 +6,16 @@ using System.Threading.Tasks;
 using MessageQueue;
 using RabbitMQ.Client.Events;
 
-namespace Phase1
+namespace Phase3
 {
-    public class Phase1Service
+    public class Phase3Service
     {
         private readonly Listener _listener;
         private readonly Publisher _publisher;
 
-        public Phase1Service()
+        public Phase3Service()
         {
-            _listener = new Listener("Phase1Request", Phase1EventHandler);
+            _listener = new Listener("Phase3Request", Phase3EventHandler);
             _publisher = new Publisher();
         }
 
@@ -29,7 +29,7 @@ namespace Phase1
             _listener.Stop();
         }
 
-        private void Phase1EventHandler(object model, BasicDeliverEventArgs ea)
+        private void Phase3EventHandler(object model, BasicDeliverEventArgs ea)
         {
             var body = ea.Body;
             var headers = ea.BasicProperties.Headers;
@@ -37,7 +37,7 @@ namespace Phase1
 
             var message = Encoding.UTF8.GetString(body);
 
-            _publisher.PublishEvent("Phase1Response", message, ea.BasicProperties.CorrelationId, headers);
+            _publisher.PublishEvent("Phase3Response", message, ea.BasicProperties.CorrelationId, headers);
         }
     }
 }

@@ -6,6 +6,7 @@ using System.Runtime.Remoting.Channels;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using EventStore;
 using MessageQueue;
 using Newtonsoft.Json;
 using ProcessManager.Events;
@@ -23,12 +24,12 @@ namespace ProcessManager
         {
             _listeners.Add(new Listener("ApplicationSubmission", EventHandlers.StartApplicationEventHandler));
             _listeners.Add(new Listener("Phase1Response", EventHandlers.Phase1ResponseEventHandler));
-            //_listeners.Add(new QueueListener("Phase2Response", EventHandlers.Phase2ResponseEventHandler));
-            //_listeners.Add(new QueueListener("Phase3Response", EventHandlers.Phase3ResponseEventHandler));
+            _listeners.Add(new Listener("Phase2Response", EventHandlers.Phase2ResponseEventHandler));
+            _listeners.Add(new Listener("Phase3Response", EventHandlers.Phase3ResponseEventHandler));
         }
 
         public void Start()
-        {           
+        {
             foreach (var listener in _listeners)
             {
                 listener.Start();

@@ -70,6 +70,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\EventStore\EventStore.csproj">
+      <Project>{1717f4ef-6b74-4e82-a144-dba68a375230}</Project>
+      <Name>EventStore</Name>
+    </ProjectReference>
     <ProjectReference Include="..\MessageQueue\MessageQueue.csproj">
       <Project>{7e90ab38-6d23-42bf-8cc0-fd52f4dbebb0}</Project>
       <Name>MessageQueue</Name>
