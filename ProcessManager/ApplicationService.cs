@@ -23,9 +23,9 @@ namespace ProcessManager
         public ApplicationService()
         {
             _listeners.Add(new Listener("ApplicationSubmission", EventHandlers.StartApplicationEventHandler));
-            _listeners.Add(new Listener("Phase1Response", EventHandlers.Phase1ResponseEventHandler));
-            _listeners.Add(new Listener("Phase2Response", EventHandlers.Phase2ResponseEventHandler));
-            _listeners.Add(new Listener("Phase3Response", EventHandlers.Phase3ResponseEventHandler));
+            _listeners.Add(new Listener("InternalCheckResponse", EventHandlers.InternalCheckResponseEventHandler));
+            _listeners.Add(new Listener("CreditCheckResponse", EventHandlers.CreditCheckResponseEventHandler));
+            _listeners.Add(new Listener("AccountOpenResponse", EventHandlers.AccountOpenResponseEventHandler));
         }
 
         public void Start()

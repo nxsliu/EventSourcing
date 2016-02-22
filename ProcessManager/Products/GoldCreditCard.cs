@@ -19,7 +19,7 @@ namespace ProcessManager.Products
             this._applicationJson = applicationJson;
         }
 
-        public void ExecuteProcess(string command, string message, string correlationId)
+        public void ExecuteProcess(string command, string message, string messageId, string correlationId)
         {
             // execute phase 1
             // Send phase 1 command

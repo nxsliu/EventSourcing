@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using EventStore.ClientAPI;
 
-namespace EventStore
+namespace ProcessManager.Repositories
 {
-    public class Writer
+    public class ApplyStream
     {
         public void Write(string type, string data, string metadata)
         {

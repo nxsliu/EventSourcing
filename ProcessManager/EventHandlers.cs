@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ProcessManager.Products;
 using RabbitMQ.Client.Events;
+using Newtonsoft.Json;
 
 namespace ProcessManager
 {
@@ -15,70 +16,33 @@ namespace ProcessManager
 
         public static void StartApplicationEventHandler(object model, BasicDeliverEventArgs ea)
         {
-            var body = ea.Body;
-            object header;
-            if (!ea.BasicProperties.Headers.TryGetValue("ApplicationType", out header))
-            {
-                // raises error
-            }
-
-            var message = Encoding.UTF8.GetString(body);
-            var applicationType = Encoding.UTF8.GetString((byte[])header);
-
-            var product = GetProcessManager(applicationType);
-
-            product.ExecuteProcess("StartApplication", message, ea.BasicProperties.CorrelationId);
+            HandleEvent(ea, "StartApplication");
         }
 
-        public static void Phase1ResponseEventHandler(object model, BasicDeliverEventArgs ea)
+        public static void InternalCheckResponseEventHandler(object model, BasicDeliverEventArgs ea)
         {
-            var body = ea.Body;
-            object header;
-            if (!ea.BasicProperties.Headers.TryGetValue("ApplicationType", out header))
-            {
-                // raises error
-            }
-
-            var message = Encoding.UTF8.GetString(body);
-            var applicationType = Encoding.UTF8.GetString((byte[])header);
-
-            var product = GetProcessManager(applicationType);
-
-            product.ExecuteProcess("Phase1Success", message, ea.BasicProperties.CorrelationId);
+            HandleEvent(ea, "InternalCheckSuccess");
         }
 
-        public static void Phase2ResponseEventHandler(object model, BasicDeliverEventArgs ea)
+        public static void CreditCheckResponseEventHandler(object model, BasicDeliverEventArgs ea)
         {
-            var body = ea.Body;
-            object header;
-            if (!ea.BasicProperties.Headers.TryGetValue("ApplicationType", out header))
-            {
-                // raises error
-            }
-
-            var message = Encoding.UTF8.GetString(body);
-            var applicationType = Encoding.UTF8.GetString((byte[])header);
-
-            var product = GetProcessManager(applicationType);
-
-            product.ExecuteProcess("Phase2Success", message, ea.BasicProperties.CorrelationId);
+            HandleEvent(ea, "CreditCheckSuccess");            
         }
 
-        public static void Phase3ResponseEventHandler(object model, BasicDeliverEventArgs ea)
+        public static void AccountOpenResponseEventHandler(object model, BasicDeliverEventArgs ea)
         {
-            var body = ea.Body;
-            object header;
-            if (!ea.BasicProperties.Headers.TryGetValue("ApplicationType", out header))
-            {
-                // raises error
-            }
+            HandleEvent(ea, "AccountOpenSuccess");
+        }
 
-            var message = Encoding.UTF8.GetString(body);
-            var applicationType = Encoding.UTF8.GetString((byte[])header);
+        private static void HandleEvent(BasicDeliverEventArgs ea, string eventName)
+        {
+            var message = Encoding.UTF8.GetString(ea.Body);
 
-            var product = GetProcessManager(applicationType);
+            var application = JsonConvert.DeserializeObject<dynamic>(message);
 
-            product.ExecuteProcess("Phase3Success", message, ea.BasicProperties.CorrelationId);
+            var product = GetProcessManager((string)application.ApplicationType);
+
+            product.ExecuteProcess(eventName, message, ea.BasicProperties.MessageId, ea.BasicProperties.CorrelationId);
         }
 
         private static IProcessManager GetProcessManager(string applicationType)
@@ -95,11 +59,12 @@ namespace ProcessManager
                 case "GoldCreditCard":
                     processManager = new GoldCreditCard();
                     break;
-                default:
-                    // this is buggy, everytime an unrecognised applicationType is passed
-                    // a NullProduct will be added
+                default:                    
+                    if (_processManagers.TryGetValue("NullProduct", out processManager)) return processManager;
+                    
                     processManager = new NullProduct();
-                    break;
+                    _processManagers.Add("NullProduct", processManager);
+                    return processManager;
             }
 
             _processManagers.Add(applicationType, processManager);

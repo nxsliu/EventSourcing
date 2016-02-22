@@ -8,6 +8,6 @@ namespace ProcessManager
 {
     public interface IProcessManager
     {
-        void ExecuteProcess(string command, string message, string correlationId);
+        void ExecuteProcess(string command, string message, string messageId, string correlationId);
     }
 }

@@ -8,7 +8,7 @@ namespace ProcessManager.Products
 {
     public class NullProduct : IProcessManager
     {
-        public void ExecuteProcess(string command, string message, string correlationId)
+        public void ExecuteProcess(string command, string message, string messageId, string correlationId)
         {
             // do nothing
         }

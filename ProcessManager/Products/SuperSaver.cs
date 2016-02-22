@@ -4,49 +4,45 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MessageQueue;
-using EventStore;
+using ProcessManager.Repositories;
 
 namespace ProcessManager.Products
 {
     public class SuperSaver : IProcessManager
     {
         private readonly Sender _sender;
-        private readonly Writer _eventStoreWriter;
+        private readonly ApplyStream _applyStream;
 
         public SuperSaver()
         {
             _sender = new Sender();
-            _eventStoreWriter = new Writer();
+            _applyStream = new ApplyStream();
         }
 
-        public void ExecuteProcess(string eventName, string message, string correlationId)
+        public void ExecuteProcess(string eventName, string message, string messageId, string correlationId)
         {
-            var headers = new Dictionary<string, object>();
-            headers.Add("ApplicationType", "SuperSaver");
-
             switch (eventName)
             {
                 case "StartApplication":
-                    _eventStoreWriter.Write("ApplicationStarted", message,
-                        "{\"ApplicationType\": \"SuperSaver\", \"CorrelationId\": \"" + correlationId + "\"}");
-                    _sender.SendCommand("Phase1Request", message, correlationId, headers);
+                    _applyStream.Write("ApplicationStarted", message,
+                        "{\"MessageId\": \""+ messageId + "\", \"CorrelationId\": \"" + correlationId + "\"}");
+                    _sender.SendCommand("InternalCheckRequest", message, correlationId);
                     break;
-                case "Phase1Success":
-                    _eventStoreWriter.Write("Phase1Success", message,
-                        "{\"ApplicationType\": \"SuperSaver\", \"CorrelationId\": \"" + correlationId + "\"}");
-                    _sender.SendCommand("Phase2Request", message, correlationId, headers);
+                case "InternalCheckSuccess":
+                    _applyStream.Write("InternalCheckSuccess", message,
+                        "{\"MessageId\": \"" + messageId + "\", \"CorrelationId\": \"" + correlationId + "\"}");
+                    _sender.SendCommand("CreditCheckRequest", message, correlationId);
                     break;
-                case "Phase2Success":
-                    _eventStoreWriter.Write("Phase2Success", message,
-                        "{\"ApplicationType\": \"SuperSaver\", \"CorrelationId\": \"" + correlationId + "\"}");
-                    _sender.SendCommand("Phase3Request", message, correlationId, headers);
+                case "CreditCheckSuccess":
+                    _applyStream.Write("CreditCheckSuccess", message,
+                        "{\"MessageId\": \"" + messageId + "\", \"CorrelationId\": \"" + correlationId + "\"}");
+                    _sender.SendCommand("AccountOpenRequest", message, correlationId);
                     break;
-                case "Phase3Success":
-                    _eventStoreWriter.Write("Phase3Success", message,
-                        "{\"ApplicationType\": \"SuperSaver\", \"CorrelationId\": \"" + correlationId + "\"}");
-                    _eventStoreWriter.Write("ApplicationCompleted", message,
-                        "{\"ApplicationType\": \"SuperSaver\", \"CorrelationId\": \"" + correlationId + "\"}");
-                    // finish the process                    
+                case "AccountOpenSuccess":
+                    _applyStream.Write("AccountOpenSuccess", message,
+                        "{\"MessageId\": \"" + messageId + "\", \"CorrelationId\": \"" + correlationId + "\"}");
+                    _applyStream.Write("ApplicationCompleted", message,
+                        "{\"MessageId\": \"" + messageId + "\", \"CorrelationId\": \"" + correlationId + "\"}");                 
                     break;
             }            
         }

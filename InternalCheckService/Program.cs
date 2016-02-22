@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Topshelf;
 
-namespace Phase3
+namespace InternalCheckService
 {
     class Program
     {
@@ -13,17 +13,17 @@ namespace Phase3
         {
             HostFactory.Run(x =>
             {
-                x.Service<Phase3Service>(s =>
+                x.Service<CheckService>(s =>
                 {
-                    s.ConstructUsing(name => new Phase3Service());
+                    s.ConstructUsing(name => new CheckService());
                     s.WhenStarted(tc => tc.Start());
                     s.WhenStopped(tc => tc.Stop());
                 });
                 x.RunAsLocalSystem();
 
                 x.SetDescription("EventSourcing POC");
-                x.SetDisplayName("EventSourcing.Phase3");
-                x.SetServiceName("EventSourcing.Phase3");
+                x.SetDisplayName("EventSourcing.InternalCheck");
+                x.SetServiceName("EventSourcing.InternalCheck");
             });
         }
     }

@@ -26,10 +26,8 @@ namespace Publisher
 
                     var basicProp = new BasicProperties();
                     basicProp.CorrelationId = Guid.NewGuid().ToString();
-                    basicProp.Headers = new Dictionary<string, object>();                                                            
-                    basicProp.Headers.Add(new KeyValuePair<string, object>("ApplicationType", "SuperSaver"));
 
-                    string message = File.ReadAllText(@"../../Application.json");
+                    string message = File.ReadAllText(@"../../SupersaverApply.json");
                     var body = Encoding.UTF8.GetBytes(message);
 
                     channel.BasicPublish(exchange: "",

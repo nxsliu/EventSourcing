@@ -10,7 +10,7 @@ namespace MessageQueue
 {
     public class Sender
     {
-        public void SendCommand(string queueName, string message, string correlationId, IDictionary<string, object> headers)
+        public void SendCommand(string queueName, string message, string correlationId)
         {
             var factory = new ConnectionFactory() { HostName = "localhost" };
             using (var connection = factory.CreateConnection())
@@ -25,7 +25,6 @@ namespace MessageQueue
 
                     var basicProp = new BasicProperties();
                     basicProp.CorrelationId = correlationId;
-                    basicProp.Headers = headers;
 
                     var body = Encoding.UTF8.GetBytes(message);
 

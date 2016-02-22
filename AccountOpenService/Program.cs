@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Topshelf;
+﻿using Topshelf;
 
-namespace Phase1
+namespace AccountOpenService
 {
     class Program
     {
@@ -13,17 +8,17 @@ namespace Phase1
         {
             HostFactory.Run(x =>
             {
-                x.Service<Phase1Service>(s =>
+                x.Service<AccountService>(s =>
                 {
-                    s.ConstructUsing(name => new Phase1Service());
+                    s.ConstructUsing(name => new AccountService());
                     s.WhenStarted(tc => tc.Start());
                     s.WhenStopped(tc => tc.Stop());
                 });
                 x.RunAsLocalSystem();
 
                 x.SetDescription("EventSourcing POC");
-                x.SetDisplayName("EventSourcing.Phase1");
-                x.SetServiceName("EventSourcing.Phase1");
+                x.SetDisplayName("EventSourcing.AccountOpen");
+                x.SetServiceName("EventSourcing.AccountOpen");
             });
         }
     }
