@@ -23,9 +23,12 @@ namespace MessageQueue
                                  autoDelete: false,
                                  arguments: null);
 
-                    var basicProp = new BasicProperties();
-                    basicProp.CorrelationId = correlationId;
-                    basicProp.Headers = headers;
+                    var basicProp = new BasicProperties()
+                    {
+                        MessageId = Guid.NewGuid().ToString(),
+                        CorrelationId = correlationId,
+                        Headers = headers
+                    };
 
                     var body = Encoding.UTF8.GetBytes(message);
 

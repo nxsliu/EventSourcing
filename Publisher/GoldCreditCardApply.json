@@ -2,6 +2,6 @@
   "ApplicationType": "GoldCreditCard",
 	"ApplicationId": "307dbe42-e7b3-4034-88b8-2b677772cf64",
   "Name": "Matthew Freud",
-  "Annual Income":  50000,
+  "AnnualIncome":  50000,
   "Email":  "mfreud@test123.com"	
 }

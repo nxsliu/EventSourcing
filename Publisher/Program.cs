@@ -24,8 +24,11 @@ namespace Publisher
                                  autoDelete: false,
                                  arguments: null);
 
-                    var basicProp = new BasicProperties();
-                    basicProp.CorrelationId = Guid.NewGuid().ToString();
+                    var basicProp = new BasicProperties
+                    {
+                        MessageId = Guid.NewGuid().ToString(),
+                        CorrelationId = Guid.NewGuid().ToString()
+                    };
 
                     string message = File.ReadAllText(@"../../SupersaverApply.json");
                     var body = Encoding.UTF8.GetBytes(message);
