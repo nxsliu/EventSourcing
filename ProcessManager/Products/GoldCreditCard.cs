@@ -3,40 +3,27 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ProcessManager.Events;
 
 namespace ProcessManager.Products
 {
-    public class GoldCreditCard : IProcessManager
-    {
-        private string _applicationJson;
+    public class GoldCreditCard : AggregateRoot
+    {        
+        private string _name;
+        private string _email;
+        private int _annualIncome;
 
-        public GoldCreditCard()
-        {            
+        private void Apply(GoldCreditCardCreated @event)
+        {
+            this.Id = @event.Id;
+            this._name = @event.Name;
+            this._email = @event.Email;
+            this._annualIncome = @event.AnnualIncome;
         }
 
-        public GoldCreditCard(string applicationJson)
+        public GoldCreditCard(Guid applicationId, string name, string email, int annualIncome)
         {
-            this._applicationJson = applicationJson;
-        }
-
-        public void ExecuteProcess(string command, string message, string messageId, string correlationId)
-        {
-            // execute phase 1
-            // Send phase 1 command
-            // Listen to phase 1 reply
-
-            // If phase 1 reply == success then
-            // execute phase A
-            // Send phase A command
-            // Listen to phase A reply
-
-            // If phase A reply == success then
-            // execute phase 3
-            // Send phase 3 command
-            // Listen to phase 3 reply
-
-            // complete
-            // Send complete event
+            ApplyChange(new GoldCreditCardCreated(applicationId, name, email, annualIncome));
         }
     }
 }

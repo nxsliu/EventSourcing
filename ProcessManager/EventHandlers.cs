@@ -57,7 +57,7 @@ namespace ProcessManager
                     processManager = new SuperSaver();
                     break;
                 case "GoldCreditCard":
-                    processManager = new GoldCreditCard();
+                    //processManager = new GoldCreditCard();
                     break;
                 default:                    
                     if (_processManagers.TryGetValue("NullProduct", out processManager)) return processManager;

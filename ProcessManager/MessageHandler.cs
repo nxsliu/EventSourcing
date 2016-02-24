@@ -21,8 +21,8 @@ namespace ProcessManager
                 //{"NullProduct", new NullProduct()}
             };
 
-        private static readonly IDictionary<string, Dictionary<Type, Action<ICommand>>> ProductCommandHandlers = 
-            new Dictionary<string, Dictionary<Type, Action<ICommand>>>
+        private static readonly IDictionary<string, Dictionary<Type, Action<ICommand, string, string>>> ProductCommandHandlers = 
+            new Dictionary<string, Dictionary<Type, Action<ICommand, string, string>>>
             {
                 {"GoldCreditCard", new GoldCreditCardCommandHandlers()},
             };
@@ -39,11 +39,12 @@ namespace ProcessManager
 
             if (productCommands.ContainsKey("Create"))
             {
-                var createCommand = productCommands["Create"](message);
+                var command = productCommands["Create"](message);
 
-                if (productCommandHandlers.ContainsKey(createCommand.GetType()))
+                if (productCommandHandlers.ContainsKey(command.GetType()))
                 {
-                    productCommandHandlers[createCommand.GetType()](createCommand);
+                    productCommandHandlers[command.GetType()](command, ea.BasicProperties.MessageId,
+                        ea.BasicProperties.CorrelationId);
                 }
                 else
                 {
@@ -70,9 +71,9 @@ namespace ProcessManager
             return productCommands;
         }
 
-        private static Dictionary<Type, Action<ICommand>> GetProductCommandHandlers(string applicationType)
+        private static Dictionary<Type, Action<ICommand, string, string>> GetProductCommandHandlers(string applicationType)
         {
-            Dictionary<Type, Action<ICommand>> productCommandHandlers;
+            Dictionary<Type, Action<ICommand, string, string>> productCommandHandlers;
 
             if (!ProductCommandHandlers.TryGetValue(applicationType, out productCommandHandlers))
             {

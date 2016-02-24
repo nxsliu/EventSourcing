@@ -64,9 +64,11 @@
     <Compile Include="Commands\GoldCreditCardCommands.cs" />
     <Compile Include="Commands\SuperSaverCommand.cs" />
     <Compile Include="EventHandlers.cs" />
-    <Compile Include="Events\ApplicationEvent.cs" />
+    <Compile Include="Events\EventMetaData.cs" />
+    <Compile Include="Events\GoldCreditCardEvents.cs" />
     <Compile Include="IProcessManager.cs" />
     <Compile Include="MessageHandler.cs" />
+    <Compile Include="Products\AggregateRoot.cs" />
     <Compile Include="Products\GoldCreditCard.cs" />
     <Compile Include="Products\NullProduct.cs" />
     <Compile Include="Products\SuperSaver.cs" />
