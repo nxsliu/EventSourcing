@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreditCheckService", "Credi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InternalCheckService", "InternalCheckService\InternalCheckService.csproj", "{591728A6-15F9-4D31-8CE5-F4A9096BB706}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcessManager.UnitTests", "ProcessManager.UnitTests\ProcessManager.UnitTests.csproj", "{F2CEA212-8D6F-4ED9-9D45-E18F95D74F73}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{591728A6-15F9-4D31-8CE5-F4A9096BB706}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{591728A6-15F9-4D31-8CE5-F4A9096BB706}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{591728A6-15F9-4D31-8CE5-F4A9096BB706}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F2CEA212-8D6F-4ED9-9D45-E18F95D74F73}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F2CEA212-8D6F-4ED9-9D45-E18F95D74F73}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F2CEA212-8D6F-4ED9-9D45-E18F95D74F73}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F2CEA212-8D6F-4ED9-9D45-E18F95D74F73}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

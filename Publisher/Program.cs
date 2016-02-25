@@ -30,7 +30,7 @@ namespace Publisher
                         CorrelationId = Guid.NewGuid().ToString()
                     };
 
-                    string message = File.ReadAllText(@"../../SupersaverApply.json");
+                    string message = File.ReadAllText(@"../../GoldCreditCardApply.json");
                     var body = Encoding.UTF8.GetBytes(message);
 
                     channel.BasicPublish(exchange: "",

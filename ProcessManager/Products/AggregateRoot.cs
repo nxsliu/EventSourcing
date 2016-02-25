@@ -7,7 +7,6 @@ using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 using ProcessManager.Events;
-using Topshelf;
 
 namespace ProcessManager.Products
 {
@@ -15,9 +14,9 @@ namespace ProcessManager.Products
     {
         public Guid Id { get; protected set; }    
 
-        private readonly List<IEvent> _changes = new List<IEvent>();
+        private readonly List<Event> _changes = new List<Event>();
 
-        public IEnumerable<IEvent> GetUncommitedChanges()
+        public IEnumerable<Event> GetUncommitedChanges()
         {
             return _changes;
         }
@@ -27,7 +26,7 @@ namespace ProcessManager.Products
             _changes.Clear();
         }
 
-        public void BuildFromHistory(IEnumerable<IEvent> events)
+        public void BuildFromHistory(IEnumerable<Event> events)
         {
             foreach (var @event in events)
             {
@@ -35,14 +34,14 @@ namespace ProcessManager.Products
             }
         }
 
-        protected void ApplyChange(IEvent @event)
+        protected void ApplyChange(Event @event)
         {
             ApplyChange(@event, true);
         }
 
-        private void ApplyChange(IEvent @event, bool isNew)
+        private void ApplyChange(Event @event, bool isNew)
         {
-            ((dynamic)this).Apply(@event);
+            ((dynamic)this).Apply((dynamic)@event);
 
             if (isNew)
             {

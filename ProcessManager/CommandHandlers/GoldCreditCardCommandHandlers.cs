@@ -24,7 +24,7 @@ namespace ProcessManager.CommandHandlers
 
         public void Handle(CreateGoldCreditCardApplication message, string messageId, string correlationId)
         {
-            var goldCreditCard = new GoldCreditCard(message.ApplicationId, message.Name, message.Email, message.AnnualIncome);
+            var goldCreditCard = new GoldCreditCard(message.ApplicationId, message.Name, message.Email, message.AnnualIncome);            
 
             _repository.Save(goldCreditCard, "ApplicationStarted", new EventMetaData(messageId, correlationId));
         }

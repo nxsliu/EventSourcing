@@ -16,7 +16,7 @@ namespace ProcessManager.Commands
             this.Add("Create", CreateGoldCreditCardApplicationCommand);
         }
 
-        private static ICommand CreateGoldCreditCardApplicationCommand(string data)
+        public ICommand CreateGoldCreditCardApplicationCommand(string data)
         {
             return JsonConvert.DeserializeObject<CreateGoldCreditCardApplication>(data);
         }
@@ -27,10 +27,18 @@ namespace ProcessManager.Commands
     }
 
     public class CreateGoldCreditCardApplication : ICommand
-    {
-        public readonly Guid ApplicationId;
-        public readonly string Name;
-        public readonly string Email;
-        public readonly int AnnualIncome;        
+    {       
+        public Guid ApplicationId { get; private set; }
+        public string Name { get; private set; }    
+        public string Email { get; private set; }   
+        public int AnnualIncome { get; private set; }
+
+        public CreateGoldCreditCardApplication(Guid applicationId, string name, string email, int annualIncome)
+        {
+            ApplicationId = applicationId;
+            Name = name;
+            Email = email;
+            AnnualIncome = annualIncome;
+        }
     }
 }

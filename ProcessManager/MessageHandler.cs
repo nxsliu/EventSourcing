@@ -11,25 +11,27 @@ using RabbitMQ.Client.Events;
 
 namespace ProcessManager
 {
-    public static class MessageHandler
+    public interface IMessageHandler
     {
-        private static readonly IDictionary<string, Dictionary<string, Func<string, ICommand>>> ProductCommands =
-            new Dictionary<string, Dictionary<string, Func<string, ICommand>>>()
-            {
-                //{"SuperSaver", new SuperSaver()},
-                {"GoldCreditCard", new GoldCreditCardCommands()},
-                //{"NullProduct", new NullProduct()}
-            };
+        void StartApplicationMessageHandler(object model, BasicDeliverEventArgs ea);
+    }
 
-        private static readonly IDictionary<string, Dictionary<Type, Action<ICommand, string, string>>> ProductCommandHandlers = 
-            new Dictionary<string, Dictionary<Type, Action<ICommand, string, string>>>
-            {
-                {"GoldCreditCard", new GoldCreditCardCommandHandlers()},
-            };
+    public class MessageHandler : IMessageHandler
+    {
+        private readonly IDictionary<string, Dictionary<string, Func<string, ICommand>>> _productCommands;
 
-        public static void StartApplicationMessageHandler(object model, BasicDeliverEventArgs ea)
+        private readonly IDictionary<string, Dictionary<Type, Action<ICommand, string, string>>> _productCommandHandlers;
+
+        public MessageHandler(IDictionary<string, Dictionary<string, Func<string, ICommand>>> productCommands,
+            IDictionary<string, Dictionary<Type, Action<ICommand, string, string>>> productCommandHandlers)
         {
-            var message = Encoding.UTF8.GetString(ea.Body);
+            this._productCommands = productCommands;
+            this._productCommandHandlers = productCommandHandlers;
+        }
+
+        public void StartApplicationMessageHandler(object model, BasicDeliverEventArgs ea)
+        {
+            var message = Encoding.UTF8.GetString(ea.Body); 
 
             var application = JsonConvert.DeserializeObject<dynamic>(message);
 
@@ -59,25 +61,25 @@ namespace ProcessManager
             }
         }
 
-        private static Dictionary<string, Func<string, ICommand>> GetProductCommands(string applicationType)
+        private IDictionary<string, Func<string, ICommand>> GetProductCommands(string applicationType)
         {
             Dictionary<string, Func<string, ICommand>> productCommands;
 
-            if (!ProductCommands.TryGetValue(applicationType, out productCommands))
+            if (!_productCommands.TryGetValue(applicationType, out productCommands))
             {
-                ProductCommands.TryGetValue("NullProduct", out productCommands);
+                _productCommands.TryGetValue("NullProduct", out productCommands);
             }
 
             return productCommands;
         }
 
-        private static Dictionary<Type, Action<ICommand, string, string>> GetProductCommandHandlers(string applicationType)
+        private IDictionary<Type, Action<ICommand, string, string>> GetProductCommandHandlers(string applicationType)
         {
             Dictionary<Type, Action<ICommand, string, string>> productCommandHandlers;
 
-            if (!ProductCommandHandlers.TryGetValue(applicationType, out productCommandHandlers))
+            if (!_productCommandHandlers.TryGetValue(applicationType, out productCommandHandlers))
             {
-                ProductCommandHandlers.TryGetValue("NullProduct", out productCommandHandlers);
+                _productCommandHandlers.TryGetValue("NullProduct", out productCommandHandlers);
             }
 
             return productCommandHandlers;

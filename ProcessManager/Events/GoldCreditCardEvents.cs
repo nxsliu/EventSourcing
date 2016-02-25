@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace ProcessManager.Events
 {
-    public class IEvent
+    public class Event
     {
     }
 
-    public class GoldCreditCardCreated : IEvent
+    public class GoldCreditCardCreated : Event
     {
         public readonly Guid Id;
         public readonly string Name;

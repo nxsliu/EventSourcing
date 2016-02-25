@@ -13,7 +13,7 @@ namespace ProcessManager.Products
         private string _email;
         private int _annualIncome;
 
-        private void Apply(GoldCreditCardCreated @event)
+        internal void Apply(GoldCreditCardCreated @event)
         {
             this.Id = @event.Id;
             this._name = @event.Name;
