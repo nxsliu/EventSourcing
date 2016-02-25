@@ -14,6 +14,7 @@ namespace ProcessManager
     public interface IMessageHandler
     {
         void StartApplicationMessageHandler(object model, BasicDeliverEventArgs ea);
+        void InternalCheckResponseMessageHandler(object model, BasicDeliverEventArgs ea);
     }
 
     public class MessageHandler : IMessageHandler
@@ -31,17 +32,27 @@ namespace ProcessManager
 
         public void StartApplicationMessageHandler(object model, BasicDeliverEventArgs ea)
         {
-            var message = Encoding.UTF8.GetString(ea.Body); 
+            HandleMessage(ea, "Create");
+        }
+
+        public void InternalCheckResponseMessageHandler(object model, BasicDeliverEventArgs ea)
+        {
+            HandleMessage(ea, "UpdateInternalCheck");
+        }
+
+        private void HandleMessage(BasicDeliverEventArgs ea, string commandKey)
+        {
+            var message = Encoding.UTF8.GetString(ea.Body);
 
             var application = JsonConvert.DeserializeObject<dynamic>(message);
 
-            var productCommands = GetProductCommands((string)application.ApplicationType);
+            var productCommands = GetProductCommands((string) application.ApplicationType);
 
-            var productCommandHandlers = GetProductCommandHandlers((string)application.ApplicationType);
+            var productCommandHandlers = GetProductCommandHandlers((string) application.ApplicationType);
 
-            if (productCommands.ContainsKey("Create"))
+            if (productCommands.ContainsKey(commandKey))
             {
-                var command = productCommands["Create"](message);
+                var command = productCommands[commandKey](message);
 
                 if (productCommandHandlers.ContainsKey(command.GetType()))
                 {

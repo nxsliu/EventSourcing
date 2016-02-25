@@ -14,11 +14,17 @@ namespace ProcessManager.Commands
         public GoldCreditCardCommands()
         {
             this.Add("Create", CreateGoldCreditCardApplicationCommand);
+            this.Add("UpdateInternalCheck", CreateUpdateInternalCheckCommand);
         }
 
-        public ICommand CreateGoldCreditCardApplicationCommand(string data)
+        public ICommand CreateGoldCreditCardApplicationCommand(string data) 
         {
             return JsonConvert.DeserializeObject<CreateGoldCreditCardApplication>(data);
+        }
+
+        public ICommand CreateUpdateInternalCheckCommand(string data)
+        {
+            return JsonConvert.DeserializeObject<UpdateInternalCheck>(data);
         }
     }
 
@@ -39,6 +45,18 @@ namespace ProcessManager.Commands
             Name = name;
             Email = email;
             AnnualIncome = annualIncome;
+        }
+    }
+
+    public class UpdateInternalCheck : ICommand
+    {
+        public Guid ApplicationId { get; private set; }
+        public bool InternalCheck { get; private set; }
+
+        public UpdateInternalCheck(Guid applicationId, bool internalCheck)
+        {
+            ApplicationId = applicationId;
+            InternalCheck = internalCheck;
         }
     }
 }

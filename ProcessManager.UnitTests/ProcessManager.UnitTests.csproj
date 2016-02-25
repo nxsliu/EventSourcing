@@ -71,11 +71,16 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CommandHandlers\GoldCreditCardCommandHandlersTests.cs" />
     <Compile Include="Commands\GoldCreditCardCommandsTests.cs" />
     <Compile Include="Products\GoldCreditCardTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\MessageQueue\MessageQueue.csproj">
+      <Project>{7e90ab38-6d23-42bf-8cc0-fd52f4dbebb0}</Project>
+      <Name>MessageQueue</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ProcessManager\ProcessManager.csproj">
       <Project>{3b75e84c-3885-42e9-b45e-ed26942fda7a}</Project>
       <Name>ProcessManager</Name>

@@ -12,10 +12,10 @@ namespace ProcessManager.Events
 
     public class GoldCreditCardCreated : Event
     {
-        public readonly Guid Id;
-        public readonly string Name;
-        public readonly string Email;
-        public readonly int AnnualIncome;
+        public Guid Id { get; private set; }
+        public string Name { get; private set; }
+        public string Email { get; private set; }
+        public int AnnualIncome { get; private set; }
 
         public GoldCreditCardCreated(Guid id, string name, string email, int annualIncome)
         {
@@ -23,6 +23,18 @@ namespace ProcessManager.Events
             Name = name;
             Email = email;
             AnnualIncome = annualIncome;
+        }
+    }
+
+    public class InternalCheckUpdated : Event
+    {
+        public Guid Id { get; private set; }
+        public bool InternalCheck { get; private set; }
+
+        public InternalCheckUpdated(Guid id, bool internalCheck)
+        {
+            Id = id;
+            InternalCheck = internalCheck;
         }
     }
 }

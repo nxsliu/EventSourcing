@@ -8,7 +8,12 @@ using RabbitMQ.Client.Framing;
 
 namespace MessageQueue
 {
-    public class Sender
+    public interface ISender
+    {
+        void SendCommand(string queueName, string message, string correlationId);
+    }
+
+    public class Sender : ISender
     {
         public void SendCommand(string queueName, string message, string correlationId)
         {

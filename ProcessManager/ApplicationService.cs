@@ -12,7 +12,7 @@ namespace ProcessManager
         public ApplicationService(IMessageHandler messageHandler)
         {
             _listeners.Add(new Listener("ApplicationSubmission", messageHandler.StartApplicationMessageHandler));
-            //_listeners.Add(new Listener("InternalCheckResponse", EventHandlers.InternalCheckResponseEventHandler));
+            _listeners.Add(new Listener("InternalCheckResponse", messageHandler.InternalCheckResponseMessageHandler));
             //_listeners.Add(new Listener("CreditCheckResponse", EventHandlers.CreditCheckResponseEventHandler));
             //_listeners.Add(new Listener("AccountOpenResponse", EventHandlers.AccountOpenResponseEventHandler));
         }

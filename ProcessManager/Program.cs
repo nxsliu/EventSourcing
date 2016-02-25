@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MessageQueue;
 using ProcessManager.CommandHandlers;
 using ProcessManager.Commands;
+using ProcessManager.Products;
+using ProcessManager.Repositories;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using Topshelf;
@@ -24,7 +27,7 @@ namespace ProcessManager
 
             var productCommandHandlers = new Dictionary<string, Dictionary<Type, Action<ICommand, string, string>>>
             {
-                {"GoldCreditCard", new GoldCreditCardCommandHandlers()},
+                {"GoldCreditCard", new GoldCreditCardCommandHandlers(new Sender(), new ApplyStream<GoldCreditCard>())},
             };
 
             var messageHandler = new MessageHandler(productCommands, productCommandHandlers);
