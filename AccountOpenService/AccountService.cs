@@ -36,7 +36,7 @@ namespace AccountOpenService
 
             string responseMessage;
 
-            if (application.InternalCheck && application.CreditCheck)
+            if (application.InternalCheck)
             {
                 responseMessage =
                     JsonConvert.SerializeObject(

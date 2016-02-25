@@ -4,47 +4,63 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MessageQueue;
+using Newtonsoft.Json;
+using ProcessManager.Events;
 using ProcessManager.Repositories;
 
 namespace ProcessManager.Products
 {
-    public class SuperSaver : IProcessManager
+    public class SuperSaver : AggregateRoot
     {
-        private readonly Sender _sender;
-        private readonly ApplyStream _applyStream;
+        [JsonProperty("Name")]
+        private string _name;
+
+        [JsonProperty("Email")]
+        private string _email;        
+
+        [JsonProperty("InternalCheck")]
+        private bool? _internalCheck;        
+
+        [JsonProperty("AccountNumber")]
+        private string _accountNumber;
+
+        [JsonProperty("BranchNumber")]
+        private string _branchNumber;
 
         public SuperSaver()
+        { }
+
+        internal void Apply(SuperSaverCreated @event)
         {
-            _sender = new Sender();
-            _applyStream = new ApplyStream();
+            this.Id = @event.Id;
+            this._name = @event.Name;
+            this._email = @event.Email;
         }
 
-        public void ExecuteProcess(string eventName, string message, string messageId, string correlationId)
+        internal void Apply(InternalCheckUpdated @event)
         {
-            switch (eventName)
-            {
-                case "StartApplication":
-                    _applyStream.Write("ApplicationStarted", message, ConstructMetaData(messageId, correlationId));
-                    _sender.SendCommand("InternalCheckRequest", message, correlationId, null);
-                    break;
-                case "InternalCheckSuccess":
-                    _applyStream.Write("InternalCheckSuccess", message, ConstructMetaData(messageId, correlationId));
-                    _sender.SendCommand("CreditCheckRequest", message, correlationId, null);
-                    break;
-                case "CreditCheckSuccess":
-                    _applyStream.Write("CreditCheckSuccess", message, ConstructMetaData(messageId, correlationId));
-                    _sender.SendCommand("AccountOpenRequest", message, correlationId, null);
-                    break;
-                case "AccountOpenSuccess":
-                    _applyStream.Write("AccountOpenSuccess", message, ConstructMetaData(messageId, correlationId));
-                    _applyStream.Write("ApplicationCompleted", message, ConstructMetaData(messageId, correlationId));                 
-                    break;
-            }            
+            this._internalCheck = @event.InternalCheck;
+        }        
+
+        internal void Apply(AccountDetailsUpdated @event)
+        {
+            this._accountNumber = @event.AccountNumber;
+            this._branchNumber = @event.BranchNumber;
         }
 
-        private string ConstructMetaData(string messageId, string correlationId)
+        public SuperSaver(Guid applicationId, string name, string email)
         {
-            return "{\"MessageId\": \"" + messageId + "\", \"CorrelationId\": \"" + correlationId + "\"}";
+            ApplyChange(new SuperSaverCreated(applicationId, name, email));
+        }
+
+        public void UpdateInternalCheck(bool internalCheckStatus)
+        {
+            ApplyChange(new InternalCheckUpdated(Id, internalCheckStatus));
+        }        
+
+        public void UpdateAccountDetails(string accountNumber, string branchNumber)
+        {
+            ApplyChange(new AccountDetailsUpdated(Id, accountNumber, branchNumber));
         }
     }
 }

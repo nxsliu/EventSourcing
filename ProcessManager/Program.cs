@@ -20,13 +20,14 @@ namespace ProcessManager
         {
             var productCommands = new Dictionary<string, Dictionary<string, Func<string, ICommand>>>()
             {
-                //{"SuperSaver", new SuperSaver()},
+                {"SuperSaver", new SuperSaverCommands()},
                 {"GoldCreditCard", new GoldCreditCardCommands()},
                 //{"NullProduct", new NullProduct()}
             };
 
             var productCommandHandlers = new Dictionary<string, Dictionary<Type, Action<ICommand, string, string>>>
             {
+                {"SuperSaver", new SuperSaverCommandHandlers(new Sender(), new ApplyStream<SuperSaver>())},
                 {"GoldCreditCard", new GoldCreditCardCommandHandlers(new Sender(), new ApplyStream<GoldCreditCard>())},
             };
 

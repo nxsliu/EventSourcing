@@ -5,11 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace ProcessManager.Events
-{
-    public class Event
-    {
-    }
-
+{    
     public class GoldCreditCardCreated : Event
     {
         public Guid Id { get; private set; }

@@ -28,10 +28,12 @@ namespace Publisher
                     {
                         MessageId = Guid.NewGuid().ToString(),
                         CorrelationId = Guid.NewGuid().ToString(),
-                        Headers = new Dictionary<string, object>() {{"ApplicationType", "GoldCreditCard"}}
+                        //Headers = new Dictionary<string, object>() {{"ApplicationType", "GoldCreditCard"}}
+                        Headers = new Dictionary<string, object>() {{"ApplicationType", "SuperSaver" } }
                     };
 
-                    string message = File.ReadAllText(@"../../GoldCreditCardApply.json");
+                    //string message = File.ReadAllText(@"../../GoldCreditCardApply.json");
+                    string message = File.ReadAllText(@"../../SupersaverApply.json");
                     var body = Encoding.UTF8.GetBytes(message);
 
                     channel.BasicPublish(exchange: "",

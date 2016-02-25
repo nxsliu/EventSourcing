@@ -38,11 +38,7 @@ namespace ProcessManager.Commands
         {
             return JsonConvert.DeserializeObject<UpdateAccountDetails>(data);
         }
-    }
-
-    public interface ICommand
-    {
-    }
+    }    
 
     public class CreateGoldCreditCardApplication : ICommand
     {       

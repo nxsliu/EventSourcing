@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ProcessManager.Products
 {
-    public class NullProduct : IProcessManager
+    public class NullProduct : AggregateRoot
     {
         public void ExecuteProcess(string command, string message, string messageId, string correlationId)
         {
