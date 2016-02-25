@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using MessageQueue;
+using Newtonsoft.Json;
 using RabbitMQ.Client.Events;
 
 namespace AccountOpenService
@@ -30,9 +32,28 @@ namespace AccountOpenService
         {
             var message = Encoding.UTF8.GetString(ea.Body);
 
-            var headers = new Dictionary<string, object> {{"ResponseStatus", "Success"}};
-           
-            _publisher.PublishEvent("AccountOpenResponse", message, ea.BasicProperties.CorrelationId, headers);
+            var application = JsonConvert.DeserializeObject<Application>(message);
+
+            string responseMessage;
+
+            if (application.InternalCheck && application.CreditCheck)
+            {
+                responseMessage =
+                    JsonConvert.SerializeObject(
+                        new
+                        {
+                            ApplicationId = application.Id,
+                            AccountOpened = true,
+                            AccountNumber = Guid.NewGuid(),
+                            BranchNumber = new Random().Next(0, 1000000).ToString("D6")
+                        });
+            }
+            else
+            {
+                responseMessage = JsonConvert.SerializeObject(new { ApplicationId = application.Id, AccountOpened = false });
+            }
+
+            _publisher.PublishEvent("AccountOpenResponse", responseMessage, ea.BasicProperties.CorrelationId, ea.BasicProperties.Headers);
         }
     }
 }

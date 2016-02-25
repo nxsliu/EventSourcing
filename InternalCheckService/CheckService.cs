@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Threading.Tasks;
 using MessageQueue;
+using Newtonsoft.Json;
 using RabbitMQ.Client.Events;
 
 namespace InternalCheckService
@@ -33,9 +35,20 @@ namespace InternalCheckService
         {
             var message = Encoding.UTF8.GetString(ea.Body);
 
-            var headers = new Dictionary<string, object> {{"ResponseStatus", "Success"}};
+            var checker = JsonConvert.DeserializeObject<Checker>(message);
 
-            _publisher.PublishEvent("InternalCheckResponse", message, ea.BasicProperties.CorrelationId, headers);
+            string responseMessage;
+
+            if (checker.Email.ToLower().StartsWith(checker.Name.Substring(0, 1).ToLower()))
+            {
+                responseMessage = JsonConvert.SerializeObject(new {ApplicationId = checker.Id, InternalCheck = true});
+            }
+            else
+            {
+                responseMessage = JsonConvert.SerializeObject(new {ApplicationId = checker.Id, InternalCheck = false});
+            }
+
+            _publisher.PublishEvent("InternalCheckResponse", responseMessage, ea.BasicProperties.CorrelationId, ea.BasicProperties.Headers);
         }
     }
 }

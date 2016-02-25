@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Text;
 using MessageQueue;
+using Newtonsoft.Json;
 using RabbitMQ.Client.Events;
 
 namespace CreditCheckService
@@ -30,9 +31,20 @@ namespace CreditCheckService
         {
             var message = Encoding.UTF8.GetString(ea.Body);
 
-            var headers = new Dictionary<string, object> { { "ResponseStatus", "Success" } };            
+            var checker = JsonConvert.DeserializeObject<Checker>(message);
 
-            _publisher.PublishEvent("CreditCheckResponse", message, ea.BasicProperties.CorrelationId, headers);
+            string responseMessage;
+
+            if (checker.AnnualIncome > 40000)
+            {
+                responseMessage = JsonConvert.SerializeObject(new { ApplicationId = checker.Id, CreditCheck = true });
+            }
+            else
+            {
+                responseMessage = JsonConvert.SerializeObject(new { ApplicationId = checker.Id, CreditCheck = false });
+            }
+
+            _publisher.PublishEvent("CreditCheckResponse", responseMessage, ea.BasicProperties.CorrelationId, ea.BasicProperties.Headers);
         }
     }
 }

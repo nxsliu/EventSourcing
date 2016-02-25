@@ -20,7 +20,16 @@ namespace ProcessManager.Products
         private int _annualIncome;
 
         [JsonProperty("InternalCheck")]
-        private bool _internalCheck;
+        private bool? _internalCheck;
+
+        [JsonProperty("CreditCheck")]
+        private bool? _creditCheck;
+
+        [JsonProperty("AccountNumber")]
+        private string _accountNumber;
+
+        [JsonProperty("BranchNumber")]
+        private string _branchNumber;
 
         public GoldCreditCard()
         { }
@@ -38,6 +47,17 @@ namespace ProcessManager.Products
             this._internalCheck = @event.InternalCheck;
         }
 
+        internal void Apply(CreditCheckUpdated @event)
+        {
+            this._creditCheck = @event.CreditCheck;
+        }
+
+        internal void Apply(AccountDetailsUpdated @event)
+        {
+            this._accountNumber = @event.AccountNumber;
+            this._branchNumber = @event.BranchNumber;
+        }
+
         public GoldCreditCard(Guid applicationId, string name, string email, int annualIncome)
         {
             ApplyChange(new GoldCreditCardCreated(applicationId, name, email, annualIncome));
@@ -46,6 +66,16 @@ namespace ProcessManager.Products
         public void UpdateInternalCheck(bool internalCheckStatus)
         {
             ApplyChange(new InternalCheckUpdated(Id, internalCheckStatus));
+        }
+
+        public void UpdateCreditCheck(bool creditCheckStatus)
+        {
+            ApplyChange(new CreditCheckUpdated(Id, creditCheckStatus));
+        }
+
+        public void UpdateAccountDetails(string accountNumber, string branchNumber)
+        {
+            ApplyChange(new AccountDetailsUpdated(Id, accountNumber, branchNumber));
         }
     }
 }

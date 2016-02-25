@@ -27,7 +27,8 @@ namespace Publisher
                     var basicProp = new BasicProperties
                     {
                         MessageId = Guid.NewGuid().ToString(),
-                        CorrelationId = Guid.NewGuid().ToString()
+                        CorrelationId = Guid.NewGuid().ToString(),
+                        Headers = new Dictionary<string, object>() {{"ApplicationType", "GoldCreditCard"}}
                     };
 
                     string message = File.ReadAllText(@"../../GoldCreditCardApply.json");

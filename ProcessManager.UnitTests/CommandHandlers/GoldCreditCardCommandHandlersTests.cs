@@ -31,7 +31,8 @@ namespace ProcessManager.UnitTests.CommandHandlers
 
             var expectedJson = "{\"Name\":\"John\",\"Email\":\"jj@abc.com\",\"AnnualIncome\":60000,\"InternalCheck\":false,\"Id\":\""+ applicationId + "\"}";
 
-            mockSender.Received(1).SendCommand("InternalCheckRequest", expectedJson, correlationId);
+            mockSender.Received(1)
+                .SendCommand("InternalCheckRequest", expectedJson, correlationId, Arg.Any<IDictionary<string, object>>());
         }
     }
 }

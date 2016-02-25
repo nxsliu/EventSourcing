@@ -10,12 +10,12 @@ namespace MessageQueue
 {
     public interface ISender
     {
-        void SendCommand(string queueName, string message, string correlationId);
+        void SendCommand(string queueName, string message, string correlationId, IDictionary<string, object> headers);
     }
 
     public class Sender : ISender
     {
-        public void SendCommand(string queueName, string message, string correlationId)
+        public void SendCommand(string queueName, string message, string correlationId, IDictionary<string, object> headers)
         {
             var factory = new ConnectionFactory() { HostName = "localhost" };
             using (var connection = factory.CreateConnection())
@@ -31,7 +31,8 @@ namespace MessageQueue
                     var basicProp = new BasicProperties()
                     {
                         MessageId = Guid.NewGuid().ToString(),
-                        CorrelationId = correlationId
+                        CorrelationId = correlationId,
+                        Headers = headers
                     };                    
 
                     var body = Encoding.UTF8.GetBytes(message);

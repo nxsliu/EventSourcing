@@ -25,15 +25,15 @@ namespace ProcessManager.Products
             {
                 case "StartApplication":
                     _applyStream.Write("ApplicationStarted", message, ConstructMetaData(messageId, correlationId));
-                    _sender.SendCommand("InternalCheckRequest", message, correlationId);
+                    _sender.SendCommand("InternalCheckRequest", message, correlationId, null);
                     break;
                 case "InternalCheckSuccess":
                     _applyStream.Write("InternalCheckSuccess", message, ConstructMetaData(messageId, correlationId));
-                    _sender.SendCommand("CreditCheckRequest", message, correlationId);
+                    _sender.SendCommand("CreditCheckRequest", message, correlationId, null);
                     break;
                 case "CreditCheckSuccess":
                     _applyStream.Write("CreditCheckSuccess", message, ConstructMetaData(messageId, correlationId));
-                    _sender.SendCommand("AccountOpenRequest", message, correlationId);
+                    _sender.SendCommand("AccountOpenRequest", message, correlationId, null);
                     break;
                 case "AccountOpenSuccess":
                     _applyStream.Write("AccountOpenSuccess", message, ConstructMetaData(messageId, correlationId));

@@ -13,8 +13,8 @@ namespace ProcessManager
         {
             _listeners.Add(new Listener("ApplicationSubmission", messageHandler.StartApplicationMessageHandler));
             _listeners.Add(new Listener("InternalCheckResponse", messageHandler.InternalCheckResponseMessageHandler));
-            //_listeners.Add(new Listener("CreditCheckResponse", EventHandlers.CreditCheckResponseEventHandler));
-            //_listeners.Add(new Listener("AccountOpenResponse", EventHandlers.AccountOpenResponseEventHandler));
+            _listeners.Add(new Listener("CreditCheckResponse", messageHandler.CreditCheckResponseMessageHandler));
+            _listeners.Add(new Listener("AccountOpenResponse", messageHandler.AccountOpenResponseMessageHandler));
         }
 
         public void Start()

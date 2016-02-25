@@ -15,6 +15,8 @@ namespace ProcessManager
     {
         void StartApplicationMessageHandler(object model, BasicDeliverEventArgs ea);
         void InternalCheckResponseMessageHandler(object model, BasicDeliverEventArgs ea);
+        void CreditCheckResponseMessageHandler(object model, BasicDeliverEventArgs ea);
+        void AccountOpenResponseMessageHandler(object model, BasicDeliverEventArgs ea);
     }
 
     public class MessageHandler : IMessageHandler
@@ -40,15 +42,25 @@ namespace ProcessManager
             HandleMessage(ea, "UpdateInternalCheck");
         }
 
+        public void CreditCheckResponseMessageHandler(object model, BasicDeliverEventArgs ea)
+        {
+            HandleMessage(ea, "UpdateCreditCheck");
+        }
+
+        public void AccountOpenResponseMessageHandler(object model, BasicDeliverEventArgs ea)
+        {
+            HandleMessage(ea, "UpdateAccountDetails");
+        }
+
         private void HandleMessage(BasicDeliverEventArgs ea, string commandKey)
         {
             var message = Encoding.UTF8.GetString(ea.Body);
 
-            var application = JsonConvert.DeserializeObject<dynamic>(message);
+            var applicationType = Encoding.UTF8.GetString((byte[]) ea.BasicProperties.Headers["ApplicationType"]);
 
-            var productCommands = GetProductCommands((string) application.ApplicationType);
+            var productCommands = GetProductCommands(applicationType);
 
-            var productCommandHandlers = GetProductCommandHandlers((string) application.ApplicationType);
+            var productCommandHandlers = GetProductCommandHandlers(applicationType);
 
             if (productCommands.ContainsKey(commandKey))
             {
