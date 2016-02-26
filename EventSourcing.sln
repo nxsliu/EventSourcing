@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InternalCheckService", "Int
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcessManager.UnitTests", "ProcessManager.UnitTests\ProcessManager.UnitTests.csproj", "{F2CEA212-8D6F-4ED9-9D45-E18F95D74F73}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApplyAPI", "ApplyAPI\ApplyAPI.csproj", "{B234C94B-3062-4172-85D0-BA6449D46DA8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -57,6 +59,10 @@ Global
 		{F2CEA212-8D6F-4ED9-9D45-E18F95D74F73}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F2CEA212-8D6F-4ED9-9D45-E18F95D74F73}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F2CEA212-8D6F-4ED9-9D45-E18F95D74F73}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B234C94B-3062-4172-85D0-BA6449D46DA8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B234C94B-3062-4172-85D0-BA6449D46DA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B234C94B-3062-4172-85D0-BA6449D46DA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B234C94B-3062-4172-85D0-BA6449D46DA8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
