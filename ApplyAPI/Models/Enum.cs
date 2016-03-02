@@ -4,9 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Projection.Models
+namespace ApplyAPI.Models
 {
-    public class ApplicationStatus
+    public enum ApplicationTypes
     {
-    }
+        JavaScript = 0,
+        NativeConfidential = 1
+    };
 }

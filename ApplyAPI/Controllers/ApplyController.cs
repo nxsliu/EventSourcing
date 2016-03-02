@@ -16,13 +16,20 @@ using MessageQueue;
 
 namespace ApplyAPI.Controllers
 {
+    [RoutePrefix("api/Apply")]
     public class ApplyController : ApiController
     {
-        private Publisher _publisher;
+        private readonly Publisher _publisher;
 
-        public IEnumerable<string> Get()
+        [Authorize]
+        public IHttpActionResult Get()
         {
-            return new[] {"Poop"};
+            return Ok(new[] {"Poop"});
+        }
+
+        public IHttpActionResult Get(string id)
+        {
+            return Ok(new[] { "Poop number " + id });
         }
 
         public ApplyController()
@@ -30,6 +37,7 @@ namespace ApplyAPI.Controllers
             _publisher = new Publisher();
         }
 
+        [Authorize]
         public HttpResponseMessage Post([FromBody]JToken apply)
         {                                    
             try

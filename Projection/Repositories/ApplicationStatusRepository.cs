@@ -24,7 +24,7 @@ namespace Projection.Repositories
     public class ApplicationStatusRepository : IApplicationStatusRepository
     {
         private const string ConnectionString =
-            @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Projects POC\EventSourcing\Projection\Database\ApplicationAdmin.mdf;Integrated Security=True";        
+            @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Projects\EventSourcing\Projection\Database\ApplicationAdmin.mdf;Integrated Security=True";        
 
         public bool ApplicationExists(string applicationId)
         {
