@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcessManager.UnitTests", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApplyAPI", "ApplyAPI\ApplyAPI.csproj", "{B234C94B-3062-4172-85D0-BA6449D46DA8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApplyAPI.UnitTests", "ApplyAPI.UnitTests\ApplyAPI.UnitTests.csproj", "{805AE1E3-44E8-484F-89E0-E5D7B8EBC1A5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,6 +65,10 @@ Global
 		{B234C94B-3062-4172-85D0-BA6449D46DA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B234C94B-3062-4172-85D0-BA6449D46DA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B234C94B-3062-4172-85D0-BA6449D46DA8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{805AE1E3-44E8-484F-89E0-E5D7B8EBC1A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{805AE1E3-44E8-484F-89E0-E5D7B8EBC1A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{805AE1E3-44E8-484F-89E0-E5D7B8EBC1A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{805AE1E3-44E8-484F-89E0-E5D7B8EBC1A5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

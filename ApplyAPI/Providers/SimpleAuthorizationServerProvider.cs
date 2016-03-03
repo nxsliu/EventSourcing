@@ -48,6 +48,7 @@ namespace ApplyAPI.Providers
 
             if (client.ApplicationType == Models.ApplicationTypes.NativeConfidential)
             {
+                // the client secret is Ev3ntS@urc3
                 if (string.IsNullOrWhiteSpace(clientSecret))
                 {
                     context.SetError("invalid_clientId", "Client secret should be sent.");

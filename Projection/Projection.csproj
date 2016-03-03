@@ -71,7 +71,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\ApplicationEvent.cs" />
+    <Compile Include="Events\AccountDetailsUpdated.cs" />
+    <Compile Include="Events\CreditCheckUpdated.cs" />
+    <Compile Include="Events\Event.cs" />
+    <Compile Include="Events\GoldCreditCardCreated.cs" />
+    <Compile Include="Events\InternalCheckUpdated.cs" />
+    <Compile Include="Events\SuperSaverCreated.cs" />
+    <Compile Include="Models\StreamEvent.cs" />
     <Compile Include="Models\SyndicationFeed.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -100,9 +106,7 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Events\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

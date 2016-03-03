@@ -9,6 +9,7 @@ using System.Runtime.Remoting;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Projection.Events;
 using Projection.Models;
 using Projection.Repositories;
 
@@ -41,8 +42,7 @@ namespace Projection
         {
             var lastEventRead = _applicationStatusRepository.GetLastSuccessfulEvent();
 
-            var currentUri = string.Format("/streams/applications/{0}/forward/5",
-                lastEventRead == null ? 0 : lastEventRead + 1);
+            var currentUri = $"/streams/test-apply/{(lastEventRead == null ? 0 : lastEventRead + 1)}/forward/5";
 
             while (true)
             {
@@ -106,13 +106,25 @@ namespace Projection
 
                     var response = await client.GetAsync(entry.Links.Single(l => l.Relation == "alternate").Uri);
 
-                    if (response.IsSuccessStatusCode)
+                    if (response.IsSuccessStatusCode) 
                     {
                         var entryEvent = await response.Content.ReadAsStringAsync();
 
-                        var applicationEvent = JsonConvert.DeserializeObject<ApplicationEvent>(entryEvent);
+                        var eventWrapper = JsonConvert.DeserializeObject<StreamEvent>(entryEvent);
 
-                        applicationEvent.ProjectEvent(_applicationStatusRepository);
+                        // strip the NameSpace from the eventType if it exists 
+                        var className =
+                            eventWrapper.Content.EventType.Substring(eventWrapper.Content.EventType.LastIndexOf('.') + 1);
+
+                        var eventTypeClass = Type.GetType($"Projection.Events.{className}");
+
+                        if (eventTypeClass != null)
+                        {
+                            var applyEvent = JsonConvert.DeserializeObject(eventWrapper.Content.Data.ToString(),
+                                eventTypeClass) as IEvent;
+
+                            applyEvent?.Execute(_applicationStatusRepository, eventWrapper.Content.EventNumber);
+                        }
                     }
                     else
                     {
